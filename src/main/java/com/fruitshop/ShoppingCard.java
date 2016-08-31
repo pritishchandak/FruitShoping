@@ -18,7 +18,7 @@ public class ShoppingCard {
 		if(fruitItemList !=null){
 			fruitsCount = fruitItemList.stream().collect(Collectors.groupingBy(f -> f, Collectors.counting()));
 		}	
-		return !isDiscount? calculateTotalFruitPrice(fruitsCount):calculateTotalDiscountedPrice(fruitsCount);
+		return isDiscount? calculateTotalDiscountedPrice(fruitsCount): calculateTotalFruitPrice(fruitsCount);
 	}
 
 	private Double calculateTotalFruitPrice (Map<FruitItem, Long> fruitsCount){
@@ -48,5 +48,3 @@ public class ShoppingCard {
 
 	}
 }
-
-
