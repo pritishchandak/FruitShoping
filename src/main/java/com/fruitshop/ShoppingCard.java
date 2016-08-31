@@ -9,12 +9,16 @@ import java.util.stream.Collectors;
 
 public class ShoppingCard {
 
-	public Double chekoutFruitPrice(List<FruitItem> fruitItemList) {
+	private DiscountedPrice BuyOneGetOne = (a,b)->(a!=null?(a%2==0? a/2*b : (a-1)/2*b+b):0.0);
+
+	private DiscountedPrice BuyThreeOnPriceOfTwo = (a,b)->(a!=null?(a%3==0? a/3*(2*b) : (a-(a%3))/3*(2*b)+(a%3)*b):0.0);
+
+	public Double chekoutFruitPrice(List<FruitItem> fruitItemList, boolean isDiscount) {
 		Map<FruitItem, Long> fruitsCount = new HashMap<>();
 		if(fruitItemList !=null){
 			fruitsCount = fruitItemList.stream().collect(Collectors.groupingBy(f -> f, Collectors.counting()));
 		}	
-		return calculateTotalFruitPrice(fruitsCount);
+		return !isDiscount? calculateTotalFruitPrice(fruitsCount):calculateTotalDiscountedPrice(fruitsCount);
 	}
 
 	private Double calculateTotalFruitPrice (Map<FruitItem, Long> fruitsCount){
@@ -34,6 +38,13 @@ public class ShoppingCard {
 		}
 		System.out.println(totalCost);
 		return totalCost;
+
+	}
+
+	private Double calculateTotalDiscountedPrice(Map<FruitItem, Long> fruitsCount){
+
+		return BuyOneGetOne.calculateDiscountPrice(fruitsCount.get(FruitItem.Apple), FruitItem.Apple.getPrice())
+				+ BuyThreeOnPriceOfTwo.calculateDiscountPrice(fruitsCount.get(FruitItem.Orange), FruitItem.Orange.getPrice());
 
 	}
 }
